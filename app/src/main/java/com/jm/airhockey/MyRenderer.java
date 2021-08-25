@@ -33,6 +33,7 @@ public class MyRenderer implements GLSurfaceView.Renderer {
     private static final String A_POSITION = "a_Position";
     private static final String U_MATRIX = "u_Matrix";
     private final float[] mProjectionMatrix = new float[16];
+    private final float[] mModelMatrix = new float[16];
     private int uMatrixLocation;
     private int aColorLocation;
     private int aPositionLocation;
@@ -88,13 +89,13 @@ public class MyRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
        glViewport(0, 0, width, height);
-       if (width > height) {
-           float aspectRatio = (float)width / (float)height;
-           Matrix.orthoM(mProjectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
-       } else {
-           float aspectRatio = (float)height / (float)width;
-           Matrix.orthoM(mProjectionMatrix, 0,-1f, 1f, -aspectRatio, aspectRatio,-5f, 5f);
-       }
+       Matrix.perspectiveM(mProjectionMatrix, 0,45, (float)width / (float)height, 1f, 10f);
+       Matrix.setIdentityM(mModelMatrix, 0);
+       Matrix.translateM(mModelMatrix, 0, 0, 0, -2.5f);
+       Matrix.rotateM(mModelMatrix, 0, -60f, 1f, 0, 0);
+       final float[] temp = new float[16];
+       Matrix.multiplyMM(temp, 0, mProjectionMatrix, 0, mModelMatrix, 0);
+       System.arraycopy(temp, 0, mProjectionMatrix, 0, temp.length);
     }
 
     @Override
