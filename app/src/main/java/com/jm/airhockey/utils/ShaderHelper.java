@@ -65,4 +65,14 @@ public class ShaderHelper {
         }
         return shaderObjId;
     }
+
+    public static int buildProgram(String vertexShaderSource, String fragShaderSource) {
+        int program;
+        // 编译
+        int vertexShader = compileVertexShader(vertexShaderSource);
+        int fragShader = compileFragmentShader(fragShaderSource);
+        // 链接
+        program = linkProgram(vertexShader, fragShader);
+        return program;
+    }
 }
